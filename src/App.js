@@ -1,8 +1,22 @@
 import React, {Component} from 'react';
-
-
-
 import './App.css';
+
+
+var uuid = require('uuid');
+var firebase = require('firebase');
+
+
+
+var config = {
+   apiKey: "AIzaSyDqHZQnl6b1maBlFTkgDyyNA8DGuMXmj7Y",
+   authDomain: "simple-survey-react.firebaseapp.com",
+   databaseURL: "https://simple-survey-react.firebaseio.com",
+   projectId: "simple-survey-react",
+   storageBucket: "simple-survey-react.appspot.com",
+   messagingSenderId: "152646567341"
+};
+
+ firebase.initializeApp(config);
 
 class App extends Component {
 
@@ -10,7 +24,7 @@ class App extends Component {
         super(props);
 
         this.state = {
-            id: '',
+            id: uuid.v1(), //this is a function from the uuid plugin - generates random unique ID
             name: '',
             answers: {
                 q1: '',
@@ -38,7 +52,16 @@ class App extends Component {
 
     handleQuestionSubmit(event) {
         event.preventDefault();
-        console.log("Question Submitted");
+        firebase.database().ref('simple-survey-react/' + this.state.id).set({
+            name: this.state.name,
+            answers: this.state.answers
+        });
+        this.setState({
+            submitted: true
+        }, function(){
+            console.log("Question Submitted");
+        });
+
     }
 
     handleQuestionChange(event) {
@@ -78,6 +101,7 @@ class App extends Component {
             questions = <div className="container">
                 <form onSubmit={this.handleQuestionSubmit.bind(this)}>
                     <h3>New Survey</h3>
+                    <h4>Question 1</h4>
                     <h5>What is your favorite operating system?</h5>
 
                     <p>
@@ -96,6 +120,50 @@ class App extends Component {
                         <input className="with-gap" type="radio" name="q1" value="Other" onChange={this.handleQuestionChange}/>
                         <label>Other</label>
                         </p>
+
+
+                        <h4>Question 2</h4>
+                        <h5>What is your favorite genre of music?</h5>
+
+                        <p>
+                            <input className="with-gap" type="radio" name="q2" value="Jazz" onChange={this.handleQuestionChange}/>
+                            <label>Jazz</label>
+                            </p>
+                        <p>
+                            <input className="with-gap" type="radio" name="q2" value="Classical" onChange={this.handleQuestionChange}/>
+                            <label>Classical</label>
+                            </p>
+                        <p>
+                            <input className="with-gap" type="radio" name="q2" value="Hip Hop" onChange={this.handleQuestionChange}/>
+                            <label>Hip Hop</label>
+                            </p>
+                        <p>
+                            <input className="with-gap" type="radio" name="q2" value="Rock" onChange={this.handleQuestionChange}/>
+                            <label>Rock</label>
+                            </p>
+
+
+                            <h4>Question 3</h4>
+                            <h5>Who is your favorite comedian?</h5>
+
+                            <p>
+                                <input className="with-gap" type="radio" name="q3" value="Dave Chappelle" onChange={this.handleQuestionChange}/>
+                                <label>Dave Chappelle</label>
+                                </p>
+                            <p>
+                                <input className="with-gap" type="radio" name="q3" value="Aziz Ansari" onChange={this.handleQuestionChange}/>
+                                <label>Aziz Ansari</label>
+                                </p>
+                            <p>
+                                <input className="with-gap" type="radio" name="q3" value="Louis CK" onChange={this.handleQuestionChange}/>
+                                <label>Louis CK</label>
+                                </p>
+                            <p>
+                                <input className="with-gap" type="radio" name="q3" value="Other" onChange={this.handleQuestionChange}/>
+                                <label>Other</label>
+                                </p>
+
+
                     <button>Submit</button>
                 </form>
             </div>;
